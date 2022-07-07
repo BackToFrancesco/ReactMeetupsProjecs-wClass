@@ -18,7 +18,7 @@ class MeetupItem extends React.Component{
             <p>{this.props.description}</p>
           </div>
           <div className={classes.actions}>
-            <button>
+            <button onClick={()=>this.props.onDeleteMeetup(this.props.id)}>
               Elimina
             </button>
           </div>

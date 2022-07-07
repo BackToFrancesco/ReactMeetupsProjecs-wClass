@@ -9,6 +9,7 @@ class AllMeetupsPage extends React.Component {
       isLoading: true,
       loadedMeetups: [],
     };
+    this.deleteData = this.deleteData.bind(this);
   }
 
   componentDidMount() {
@@ -36,6 +37,19 @@ class AllMeetupsPage extends React.Component {
         this.setState({ isLoading: false, loadedMeetups: meetups });
       });
   }
+
+  deleteData(id){
+    fetch(
+      'https://meetup-react-a4b27-default-rtdb.firebaseio.com/meetups/'+id+'.json',
+      {
+        method: 'DELETE',
+      }
+    ).then(() => {
+      console.log('Eliminato meetup: '+id);
+      this.componentDidMount();
+    });
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -47,7 +61,7 @@ class AllMeetupsPage extends React.Component {
       return (
         <section>
           <h1>All Meetups</h1>
-          <MeetupList meetups={this.state.loadedMeetups} />
+          <MeetupList meetups={this.state.loadedMeetups} onDeleteMeetup={this.deleteData}/>
         </section>
       );
     }

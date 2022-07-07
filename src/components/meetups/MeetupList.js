@@ -3,6 +3,16 @@ import MeetupItem from "./MeetupItem";
 import classes from "./MeetupList.module.css";
 
 class MeetupList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.deleteMeetupHandler = this.deleteMeetupHandler.bind(this);
+    };
+    
+
+  deleteMeetupHandler(id){
+    this.props.onDeleteMeetup(id);
+  }
+
   render() {
     return (
       <ul className={classes.list}>
@@ -14,6 +24,7 @@ class MeetupList extends React.Component {
             title={meetup.title}
             address={meetup.address}
             description={meetup.description}
+            onDeleteMeetup={this.deleteMeetupHandler}
           />
         ))}
       </ul>
