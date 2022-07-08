@@ -17,19 +17,39 @@ class NewMeetupForm extends React.Component {
       items: [],
     };
     this.submitHandler = this.submitHandler.bind(this);
+    this.insertFromExcelHandler = this.insertFromExcelHandler.bind(this);
+    this.setItems = this.setItems.bind(this);
   }
 
   submitHandler(event) {
     event.preventDefault();
-
-    const meetupData = {
-      title: this.state.enteredTitle,
-      image: this.state.enteredImage,
-      address: this.state.enteredAddress,
-      description: this.state.enteredDescription,
-    };
-
+    const meetup = this.createMeetup(this.state.enteredTitle,this.state.enteredImage,this.state.enteredAddress,this.state.enteredDescription);
+    const meetupData = [];
+    meetupData.push(meetup);
     this.props.onAddMeetup(meetupData);
+    
+  }
+
+  createMeetup(title, image, address,description){
+    const meetup = {
+      title: title,
+      image: image,
+      address: address,
+      description: description,
+    };
+    return meetup;
+  }
+
+  insertFromExcelHandler(items){
+    let meetupData = [];
+    items.forEach(item => {
+      meetupData.push(item);
+    });
+    this.props.onAddMeetup(meetupData);
+  }
+
+  setItems(items){
+    this.setState({items: items});
   }
 
   readExcel(file) {
@@ -55,14 +75,23 @@ class NewMeetupForm extends React.Component {
     });
 
     promise.then((d) => {
-      this.setState({ items: d });
-      console.log(this.state.items);
+      let a=this.createMeetups(d);
+      this.setItems(a);
     });
+  }
+
+  createMeetups(items){
+    let meetupData = [];
+    items.forEach((d) => {
+      let meetup = this.createMeetup(d.Title, d.Image, d.Description, d.Address);
+      meetupData.push(meetup);
+    });
+    return meetupData;
   }
 
   render() {
     return (
-      this.state.items.length >0 ? <ExcelInputMeetups items={this.state.items}/>:<Card>
+      this.state.items.length > 0 ? <ExcelInputMeetups items={this.state.items} onSubmit={this.insertFromExcelHandler} onSetItems={this.setItems} />:<Card>
         <form className={classes.form} onSubmit={this.submitHandler}>
           <div className={classes.control}>
             <label>Meetup Title</label>

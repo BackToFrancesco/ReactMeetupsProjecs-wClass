@@ -1,43 +1,46 @@
-import React from 'react';
+import React from "react";
 
-import NewMeetupForm from '../components/meetups/NewMeetupForm';
-
+import NewMeetupForm from "../components/meetups/NewMeetupForm";
 
 class NewMeetupPage extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.prova = this.prova.bind(this);
     this.addMeetupHandler = this.addMeetupHandler.bind(this);
   }
 
-  fetchData(meetupData){
+  fetchData(meetup) {
     return fetch(
-    'https://meetup-react-a4b27-default-rtdb.firebaseio.com/meetups.json',
-    {
-      method: 'POST',
-      body: JSON.stringify(meetupData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-}
+      "https://meetup-react-a4b27-default-rtdb.firebaseio.com/meetups.json",
+      {
+        method: "POST",
+        body: JSON.stringify(meetup),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 
   addMeetupHandler(meetupData) {
-   
-    this.fetchData(meetupData).then(() => {
-      window.location = '/';
-      console.log('Arrivato');
+    let cnt = meetupData.length;
+    meetupData.forEach((meetup) => {
+      this.fetchData(meetup).then(()=>{
+        cnt--;
+        if (cnt === 0) {
+          window.location = "/";
+        }
+      });
     });
   }
 
-
-  render(){return (
-    <section>
-      <h1>Add New Meetup</h1>
-      <NewMeetupForm onAddMeetup={this.addMeetupHandler} />       
-    </section>
-  );}
+  render() {
+    return (
+      <section>
+        <h1>Add New Meetup</h1>
+        <NewMeetupForm onAddMeetup={this.addMeetupHandler} />
+      </section>
+    );
+  }
 }
 
 export default NewMeetupPage;

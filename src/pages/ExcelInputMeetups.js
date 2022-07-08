@@ -1,4 +1,5 @@
 import React from "react";
+import Card from "../components/ui/Card";
 
 class ExcelInputMeetups extends React.Component {
   constructor(props) {
@@ -11,23 +12,25 @@ class ExcelInputMeetups extends React.Component {
   deleteHandler(title) {
     const items = this.state.items.slice();
     for (let i = 0; i < items.length; i++) {
-      if (items[i].Title === title) {
+      if (items[i].title === title) {
         items.splice(i, 1);
       }
     }
-    this.setState({ items: items });
+    this.setItems(items);
   }
 
   confirmHandler() {
-    this.state.items.forEach((d) => {
-      console.log(d.Title);
-    });
+    this.props.onSubmit(this.state.items);
+  }
+
+  setItems(items){
+    this.setState({items: items});
+    this.props.onSetItems(items);
   }
 
   render() {
     return (
-      <section>
-        <h1>Insert by File</h1>
+      <Card>
         <div>
           <table className="table container">
             <thead>
@@ -40,22 +43,22 @@ class ExcelInputMeetups extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.items.map((d) => (
-                <tr key={d.Title}>
-                  <th>{d.Title}</th>
+              {this.state.items.map((meetup) => (
+                <tr key={meetup.title}>
+                  <th>{meetup.title}</th>
                   <td>
                     <img
                       className="img-thumbnail"
-                      src={d.Image}
-                      alt={d.Title}
+                      src={meetup.image}
+                      alt={meetup.title}
                     />
                   </td>
-                  <th>{d.Description}</th>
-                  <td>{d.Address}</td>
+                  <th>{meetup.description}</th>
+                  <td>{meetup.address}</td>
                   <td>
                     <button
                       className="btn btn-danger"
-                      onClick={() => this.deleteHandler(d.Title)}
+                      onClick={() => this.deleteHandler(meetup.title)}
                     >
                       Delete
                     </button>
@@ -75,7 +78,7 @@ class ExcelInputMeetups extends React.Component {
             </div>
           ) : null}
         </div>
-      </section>
+      </Card>
     );
   }
 }

@@ -45,7 +45,6 @@ class AllMeetupsPage extends React.Component {
         method: 'DELETE',
       }
     ).then(() => {
-      console.log('Eliminato meetup: '+id);
       this.componentDidMount();
     });
   }
