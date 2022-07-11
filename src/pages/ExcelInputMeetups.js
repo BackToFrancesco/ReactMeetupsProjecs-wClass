@@ -1,11 +1,13 @@
 import React from "react";
 import Card from "../components/ui/Card";
+import Button from "react-bootstrap/Button";
 
 class ExcelInputMeetups extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       items: this.props.items,
+      isLoading: this.props.isLoading
     };
   }
 
@@ -23,8 +25,8 @@ class ExcelInputMeetups extends React.Component {
     this.props.onSubmit(this.state.items);
   }
 
-  setItems(items){
-    this.setState({items: items});
+  setItems(items) {
+    this.setState({ items: items });
     this.props.onSetItems(items);
   }
 
@@ -68,13 +70,22 @@ class ExcelInputMeetups extends React.Component {
             </tbody>
           </table>
           {this.state.items.length ? (
-            <div>
-              <button
-                className="btn btn-success"
-                onClick={() => this.confirmHandler()}
+            <div class="row">
+              <div class="col-lg-1 col-centered">
+              <Button
+                className="mx-auto"
+                variant="success"
+                size="lg"
+                disabled={this.state.isLoading}
+                onClick={() => {
+                  this.confirmHandler();
+                  this.props.setIsLoading(true);
+                  this.setState({isLoading: true});
+                }}
               >
-                Confirm
-              </button>
+                {this.state.isLoading ? "Loading..." : "Confirm"}
+              </Button>
+              </div>
             </div>
           ) : null}
         </div>
