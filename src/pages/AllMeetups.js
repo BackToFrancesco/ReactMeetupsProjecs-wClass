@@ -1,6 +1,8 @@
+import Button from "react-bootstrap/Button";
 import React from "react";
-
+import { connect } from "react-redux";
 import MeetupList from "../components/meetups/MeetupList";
+import { logIn, logOut } from "../actions";
 
 class AllMeetupsPage extends React.Component {
   constructor(props) {
@@ -38,11 +40,13 @@ class AllMeetupsPage extends React.Component {
       });
   }
 
-  deleteData(id){
+  deleteData(id) {
     fetch(
-      'https://meetup-react-a4b27-default-rtdb.firebaseio.com/meetups/'+id+'.json',
+      "https://meetup-react-a4b27-default-rtdb.firebaseio.com/meetups/" +
+        id +
+        ".json",
       {
-        method: 'DELETE',
+        method: "DELETE",
       }
     ).then(() => {
       this.componentDidMount();
@@ -60,11 +64,30 @@ class AllMeetupsPage extends React.Component {
       return (
         <section>
           <h1>All Meetups</h1>
-          <MeetupList meetups={this.state.loadedMeetups} onDeleteMeetup={this.deleteData}/>
+          <MeetupList
+            meetups={this.state.loadedMeetups}
+            onDeleteMeetup={this.deleteData}
+          />
+          <Button
+            onClick={() => {
+              this.props.logIn();
+            }}
+          >
+            {this.props.isLogged ? "LogOut" : "LogIn"}
+          </Button>
         </section>
       );
     }
   }
 }
 
-export default AllMeetupsPage;
+const mapStateToProps = (state) => {
+  return { isLogged: state.isLogged };
+};
+/** Altro modo per fornire logIn/logged 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logIn: () => dispatch({type: 'SING_IN'})};
+}
+*/
+export default connect(mapStateToProps, { logIn, logOut })(AllMeetupsPage);
